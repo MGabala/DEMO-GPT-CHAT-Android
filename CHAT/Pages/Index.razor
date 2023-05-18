@@ -1,0 +1,80 @@
+﻿@page "/"
+
+@if(APIKEY == "")
+{
+    <div class="container-fluid">
+        <div class="edit-form">
+            <p>Wprowadź APIKEY ze strony aby uruchomić działanie aplikacji.</p>
+            <EditForm Model="@APIKEY" OnValidSubmit="AddApiKey" OnInvalidSubmit="Invalid">
+                <p>
+                    <InputText @bind-Value="apikey" class="form-control"></InputText>
+
+                </p>
+                <div class="row">
+                    <div class="col">
+                        <div class="d-grid gap-2">
+                            <button class="btn form-button" type="submit">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+
+        </div>
+    </div>
+}
+else
+{
+    <div class="container">
+        <div class="response-container" style="padding:10px;">
+            @if (Question != "")
+            {
+                <div class="card" style="background-color:#343541;">
+                    <h6 class="card-header" style="background-color:#59595c;color:white; text-align:center;">@Question</h6>
+                    <div class="card-body">
+                        <p class="card-text">
+                            @if (!string.IsNullOrEmpty(Response))
+                            {
+                                <pre>
+                                <code>
+                                        @((MarkupString)RenderMarkdown(Response))
+                                                     </code>
+                                                </pre>
+                            }
+                        </p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="edit-form">
+            <EditForm id="editForm" Model="@Message" OnValidSubmit="SendRequest" OnInvalidSubmit="Invalid" class="edit-form">
+                <DataAnnotationsValidator />
+                <p>
+                    <InputTextArea @onkeyup="Enter"
+                               @oninput="Input"
+                               @bind-Value="message"
+                                   style="background-color:#444654;color:#dcce85;font-weight:bold;" name="message" class="form-control" placeholder="Ask question">
+                    </InputTextArea>
+                </p>
+                <div class="row">
+                    <div class="col">
+                        <div class="d-grid gap-2">
+                            <button class="btn form-button" type="submit">Send</button>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="d-grid gap-2">
+                            <button class="btn form-button" @onclick="Resend" type="button">Resend</button>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="d-grid gap-2">
+                            <button class="btn form-button" @onclick="NewChat" type="button">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
